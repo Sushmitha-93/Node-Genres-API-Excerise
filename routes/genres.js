@@ -11,43 +11,49 @@ const joi = require("@hapi/joi");
 // ];
 
 // 2. Create SCHEMA
-const genresSchema = mongoose.Schema({
-  id: { type: Number, required: true },
-  name: { type: String, required: true }
-});
-
 // 3. Create MODEL class from Schema
-const Genres = mongoose.model("genres", genresSchema);
+const Genres = mongoose.model(
+  "genres",
+  mongoose.Schema({
+    id: { type: String },
+    name: { type: String, required: true }
+  })
+);
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+  const genres = await Genres.find();
   res.send(genres);
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   //Check if id exists
-  const genre = genres.find(g => g.id === parseInt(req.params.id));
+  const genre = await Genres.findById(req.params.id).catch(err => {
+    return res.status(404).send("Genre ID does not exist - Invlid id");
+  });
   if (!genre) return res.status(404).send("Genre ID does not exist");
 
   //Send requested genre
   res.send(genre);
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   //validate client input i.e genre
   const result = validateGenre(req.body);
   if (result.error)
     return res.status(400).send(result.error.details[0].message);
 
-  //push new genre and send res
-  const genre = { id: genres.length + 1, name: req.body.genre };
-  genres.push(genre);
+  //save new genre and send res
+  let genre = new Genres({ name: req.body.name });
+  genre = await genre.save();
 
   res.send(genre);
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   //Check if id exists
-  const genre = genres.find(g => g.id === parseInt(req.params.id));
+  let genre = await Genres.findById(req.params).catch(err =>
+    res.status(404).send("Genre ID does not exist - Invlid id")
+  );
   if (!genre) return res.status(404).send("Genre ID does not exist");
 
   //Validate client input
@@ -56,18 +62,25 @@ router.put("/:id", (req, res) => {
     return res.status(400).send(result.error.details[0].message);
 
   //Update genre and send res
-  genre.name = req.body.genre;
+  genre = await Genres.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: { name: req.body.name }
+    },
+    { new: true }
+  );
   res.send(genre);
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   //Check if id exists
-  const genre = genres.find(g => g.id === parseInt(req.params.id));
+  let genre = await Genres.findByIdAndDelete(req.params.id).catch(err =>
+    res.status(404).send("Genre ID does not exist - Invlid id")
+  );
   if (!genre) return res.status(404).send("Genre ID does not exist");
 
   //Delete and send response
-  const index = genres.indexOf(genre);
-  genres.splice(index, 1);
+  // genre = await Genres.findByIdAndDelete(req.params.id);
 
   res.send(genre);
 });
@@ -75,7 +88,7 @@ router.delete("/:id", (req, res) => {
 //Validate client genre input
 function validateGenre(genre) {
   const schema = {
-    genre: joi
+    name: joi
       .string()
       .min(3)
       .required()

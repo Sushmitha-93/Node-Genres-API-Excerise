@@ -9,7 +9,7 @@ app.use("/api/genres", genres); // all routes starting with this will go to genr
 
 //Connect to MongoDB database genres
 mongoose
-  .connect("mongodb://localhost/vidlydb")
+  .connect("mongodb://localhost/vidlydb", { useNewUrlParser: true })
   .then("Connected to MongoDB database...")
   .catch(err => console.log("Could not connect to MongoDB", err));
 
