@@ -4,12 +4,7 @@ const mongoose = require("mongoose");
 
 const joi = require("@hapi/joi");
 
-// const genres = [
-//   { id: 1, name: "Action" },
-//   { id: 2, name: "Romance" },
-//   { id: 3, name: "Comedy" }
-// ];
-
+// 1. Connect to MongoDB in index.js
 // 2. Create SCHEMA
 // 3. Create MODEL class from Schema
 const Genres = mongoose.model(
@@ -50,25 +45,20 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
-  //Check if id exists
-  let genre = await Genres.findById(req.params).catch(err =>
-    res.status(404).send("Genre ID does not exist - Invlid id")
-  );
-  if (!genre) return res.status(404).send("Genre ID does not exist");
-
   //Validate client input
   const result = validateGenre(req.body);
   if (result.error)
     return res.status(400).send(result.error.details[0].message);
 
   //Update genre and send res
-  genre = await Genres.findByIdAndUpdate(
+  let genre = await Genres.findByIdAndUpdate(
     req.params.id,
     {
       $set: { name: req.body.name }
     },
-    { new: true }
-  );
+    { new: true, useFindAndModify: false }
+  ).catch(err => {// Catch type cast error if ID given to API is in wrong format});
+  if (!genre) return res.status(404).send("Genre ID does not exist");
   res.send(genre);
 });
 
