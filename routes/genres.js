@@ -1,12 +1,12 @@
-const express = require("express");
-const router = express.Router();
-const mongoose = require("mongoose");
+const express = require("express"); //for create API
+const router = express.Router(); // do module.exports = router
+const mongoose = require("mongoose"); //for connecting to database
 
-const joi = require("@hapi/joi");
+const joi = require("@hapi/joi"); //for validating client input sent in API
 
 // 1. Connect to MongoDB in index.js
 // 2. Create SCHEMA
-// 3. Create MODEL class from Schema
+// 3. Create MODEL class from Schema (only for saving/insert)
 const Genres = mongoose.model(
   "genres",
   mongoose.Schema({
@@ -57,7 +57,9 @@ router.put("/:id", async (req, res) => {
       $set: { name: req.body.name }
     },
     { new: true, useFindAndModify: false }
-  ).catch(err => {// Catch type cast error if ID given to API is in wrong format});
+  ).catch(err => {
+    // Catch type cast error if ID given to API is in wrong format
+  });
   if (!genre) return res.status(404).send("Genre ID does not exist");
   res.send(genre);
 });

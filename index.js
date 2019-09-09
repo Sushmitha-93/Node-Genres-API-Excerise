@@ -1,11 +1,13 @@
 const express = require("express");
 const genres = require("./routes/genres");
+const customers = require("./routes/customers");
 const mongoose = require("mongoose");
 
 //create server
 const app = express();
 app.use(express.json()); //parses body and return req.body
 app.use("/api/genres", genres); // all routes starting with this will go to genres module
+app.use("/api/customers", customers);
 
 //Connect to MongoDB database genres
 mongoose
