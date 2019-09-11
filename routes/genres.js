@@ -1,19 +1,10 @@
 const express = require("express"); //for create API
 const router = express.Router(); // do module.exports = router
-const mongoose = require("mongoose"); //for connecting to database
 
-const joi = require("@hapi/joi"); //for validating client input sent in API
-
+const { Genres, validateGenre } = require("../models/genre");
 // 1. Connect to MongoDB in index.js
 // 2. Create SCHEMA
 // 3. Create MODEL class from Schema (only for saving/insert)
-const Genres = mongoose.model(
-  "genres",
-  mongoose.Schema({
-    id: { type: String },
-    name: { type: String, required: true }
-  })
-);
 
 router.get("/", async (req, res) => {
   const genres = await Genres.find();
@@ -76,16 +67,5 @@ router.delete("/:id", async (req, res) => {
 
   res.send(genre);
 });
-
-//Validate client genre input
-function validateGenre(genre) {
-  const schema = {
-    name: joi
-      .string()
-      .min(3)
-      .required()
-  };
-  return joi.validate(genre, schema);
-}
 
 module.exports = router;

@@ -9,7 +9,7 @@ app.use(express.json()); //parses body and return req.body
 app.use("/api/genres", genres); // all routes starting with this will go to genres module
 app.use("/api/customers", customers);
 
-//Connect to MongoDB database genres
+//Connect to MongoDB 'vidlydb' database genres
 mongoose
   .connect("mongodb://localhost/vidlydb", { useNewUrlParser: true })
   .then("Connected to MongoDB database...")

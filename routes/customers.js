@@ -1,16 +1,7 @@
 const express = require("express");
 const router = express.Router(); // module.exports = router
-const joi = require("@hapi/joi");
-const mongoose = require("mongoose");
 
-const Customers = mongoose.model(
-  "customers",
-  mongoose.Schema({
-    name: { type: String, required: true },
-    phone: { type: Number, required: true },
-    isGold: Boolean
-  })
-);
+const { Customers, validateCustomer } = require("../models/customer");
 
 // Get API for all
 router.get("/", async (req, res) => {
@@ -75,13 +66,5 @@ router.delete("/:id", async (req, res) => {
 
   res.send(customer);
 });
-
-function validateCustomer(customer) {
-  const schema = {
-    name: joi.string().required(),
-    phone: joi.string().required()
-  };
-  return joi.validate(customer, schema);
-}
 
 module.exports = router;
