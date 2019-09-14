@@ -6,14 +6,15 @@ const Customers = mongoose.model(
   mongoose.Schema({
     name: { type: String, required: true },
     phone: { type: Number, required: true },
-    isGold: Boolean
+    isGold: { type: Boolean, default: false }
   })
 );
 
 function validateCustomer(customer) {
   const schema = {
     name: joi.string().required(),
-    phone: joi.string().required()
+    phone: joi.string().required(),
+    isGold: joi.boolean()
   };
   return joi.validate(customer, schema);
 }

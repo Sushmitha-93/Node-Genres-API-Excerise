@@ -1,10 +1,11 @@
 const express = require("express"); //for create API
 const router = express.Router(); // do module.exports = router
 
-const { Genres, validateGenre } = require("../models/genre");
+const { Genres, validateGenre } = require("../models/genre"); // requiring Genre model(step 3)
+
 // 1. Connect to MongoDB in index.js
 // 2. Create SCHEMA
-// 3. Create MODEL class from Schema (only for saving/insert)
+// 3. Create MODEL class from Schema (to call mongoose functions to find,save,update,delete)
 
 router.get("/", async (req, res) => {
   const genres = await Genres.find();

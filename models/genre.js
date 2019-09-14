@@ -4,13 +4,12 @@ const joi = require("@hapi/joi"); //for validating client input sent in API
 // 1. Connect to MongoDB in index.js
 // 2. Create SCHEMA
 // 3. Create MODEL class from Schema (only for saving/insert)
-const Genres = mongoose.model(
-  "genres",
-  mongoose.Schema({
-    id: { type: String },
-    name: { type: String, required: true }
-  })
-);
+const genreSchema = mongoose.Schema({
+  id: { type: String },
+  name: { type: String, required: true }
+});
+
+const Genres = mongoose.model("genres", genreSchema);
 
 //Validate client genre input
 function validateGenre(genre) {
@@ -25,3 +24,4 @@ function validateGenre(genre) {
 
 exports.Genres = Genres;
 exports.validateGenre = validateGenre;
+exports.genreSchema = genreSchema;
