@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
+const mongoose = require("mongoose");
+const fawn = require("fawn");
+fawn.init(mongoose);
+
 const { Rentals, validateRental } = require("../models/rental");
 const { Movies } = require("../models/movie");
 const { Customers } = require("../models/customer");
@@ -42,13 +46,16 @@ router.post("/", async (req, res) => {
       dailyRentalRate: movie.dailyRentalRate
     }
   });
-  rental = await rental.save();
 
-  // Decrement stock of that movie
-  movie.numberInStock--;
-  movie.save();
-
-  res.send(rental);
+  // Save rental in rentals collection and also decrement numberInStock in movie in movies collection
+  new fawn.Task()
+    .save("rentals", rental)
+    .update("movies", { _id: movie._id }, { $inc: { numberInStock: -1 } })
+    .run()
+    .then(res.send(rental))
+    .catch(err => {
+      res.status(500).send("Internal Server Error...");
+    });
 });
 
 module.exports = router;
