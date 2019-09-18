@@ -4,6 +4,7 @@ const customers = require("./routes/customers");
 const mongoose = require("mongoose");
 const movies = require("./routes/movies");
 const rentals = require("./routes/rentals");
+const users = require("./routes/users");
 
 //create server
 const app = express();
@@ -12,6 +13,7 @@ app.use("/api/genres", genres); // all routes starting with this will go to genr
 app.use("/api/customers", customers);
 app.use("/api/movies", movies);
 app.use("/api/rentals", rentals);
+app.use("/api/users", users);
 
 //Connect to MongoDB 'vidlydb' database genres
 mongoose
