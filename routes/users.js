@@ -1,12 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const config = require("config");
+const auth = require("../middlewares/auth");
 
 const { Users, validateUser } = require("../models/user");
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   // validate client input
   const result = validateUser(req.body);
   if (result.error)
