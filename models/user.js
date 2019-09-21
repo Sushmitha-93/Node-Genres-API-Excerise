@@ -1,11 +1,13 @@
 const mongoose = require("mongoose");
 const joi = require("@hapi/joi");
+const jwt = require("jsonwebtoken");
+const config = require("config");
 
 // Connect to mongoDB in index
 // create Schema
 // create model to call functions
 // create validation function to validate client input to api
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -25,6 +27,13 @@ const userSchema = mongoose.Schema({
     maxlength: 1024
   }
 });
+
+/* Creating method for object. Here we are assigning function to a new proprty 'generateJwtAuthToken' 
+   of Schema.methods object */
+userSchema.methods.generateJwtAuthToken = function() {
+  const token = jwt.sign({ id: this._id }, config.get("jwtPrivateKey"));
+  return token;
+};
 
 // Create user model (Specifies collection in which it should be inserted)
 const Users = new mongoose.model("users", userSchema);

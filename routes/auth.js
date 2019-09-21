@@ -24,7 +24,7 @@ router.post("/", async function(req, res) {
   if (!validPassword) return res.status(400).send("Incorrect Password");
 
   // Sending JWT
-  const token = jwt.sign({ id: user._id }, config.get("jwtPrivateKey"));
+  const token = user.generateJwtAuthToken();
   return res.send(token);
 });
 
