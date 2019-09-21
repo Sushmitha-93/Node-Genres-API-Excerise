@@ -6,6 +6,13 @@ const movies = require("./routes/movies");
 const rentals = require("./routes/rentals");
 const users = require("./routes/users");
 const auth = require("./routes/auth");
+const config = require("config");
+
+// Before we start the server - We must ensure below environment variable is set, otherwise exit
+if (!config.get("jwtPrivateKey")) {
+  console.log("FATAL ERROR: Env var vidly_jwtPrivateKey not set");
+  process.exit(1);
+}
 
 //create server
 const app = express();

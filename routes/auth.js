@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const joi = require("@hapi/joi");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const config = require("config");
 
 const { Users } = require("../models/user");
 
@@ -21,7 +23,9 @@ router.post("/", async function(req, res) {
   const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (!validPassword) return res.status(400).send("Incorrect Password");
 
-  return res.send(true);
+  // Sending JWT
+  const token = jwt.sign({ id: user._id }, config.get("jwtPrivateKey"));
+  return res.send(token);
 });
 
 function validateReqBody(user) {
