@@ -5,7 +5,14 @@ const auth = require("../middlewares/auth");
 
 const { Users, validateUser } = require("../models/user");
 
-router.post("/", auth, async (req, res) => {
+// GETTING INFO OF CURRENT USER who is logged in (User Profile info)
+router.get("/me", auth, async (req, res) => {
+  let user = await Users.findById(req.user._id).select("-password");
+  res.send(user);
+});
+
+// CREATING USER / REGISTER
+router.post("/", async (req, res) => {
   // validate client input
   const result = validateUser(req.body);
   if (result.error)
@@ -19,7 +26,8 @@ router.post("/", auth, async (req, res) => {
   let user = new Users({
     name: req.body.name,
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    isAdmin: req.body.isAdmin
   });
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);

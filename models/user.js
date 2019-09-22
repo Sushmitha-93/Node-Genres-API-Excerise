@@ -25,20 +25,24 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 3,
     maxlength: 1024
-  }
+  },
+  isAdmin: Boolean
 });
 
 /* Creating method for object. Here we are assigning function to a new proprty 'generateJwtAuthToken' 
    of Schema.methods object */
 userSchema.methods.generateJwtAuthToken = function() {
-  const token = jwt.sign({ id: this._id }, config.get("jwtPrivateKey"));
+  const token = jwt.sign(
+    { _id: this._id, isAdmin: this.isAdmin },
+    config.get("jwtPrivateKey")
+  );
   return token;
 };
 
 // Create user model (Specifies collection in which it should be inserted)
 const Users = new mongoose.model("users", userSchema);
 
-//validation for client input
+//validation for client request
 function validateUser(user) {
   const schema = {
     name: joi
@@ -50,7 +54,8 @@ function validateUser(user) {
       .string()
       .email()
       .required(),
-    password: joi.string().required()
+    password: joi.string().required(),
+    isAdmin: joi.boolean()
   };
   return joi.validate(user, schema);
 }

@@ -1,6 +1,9 @@
 const express = require("express"); //for create API
 const router = express.Router(); // do module.exports = router
 
+const authMidware = require("../middlewares/auth");
+const adminMidware = require("../middlewares/admin");
+
 const { Genres, validateGenre } = require("../models/genre"); // requiring Genre model(step 3)
 
 // 1. Connect to MongoDB in index.js
@@ -23,7 +26,7 @@ router.get("/:id", async (req, res) => {
   res.send(genre);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authMidware, adminMidware, async (req, res) => {
   //validate client input i.e genre
   const result = validateGenre(req.body);
   if (result.error)
@@ -56,15 +59,12 @@ router.put("/:id", async (req, res) => {
   res.send(genre);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authMidware, adminMidware, async (req, res) => {
   //Check if id exists
   let genre = await Genres.findByIdAndDelete(req.params.id).catch(err => {
     //  catch Invlid id format error. Because it thorows Type cast error if ID is not of MongoDB format
   });
   if (!genre) return res.status(404).send("Genre ID does not exist");
-
-  //Delete and send response
-  genre = await Genres.findByIdAndDelete(req.params.id);
 
   res.send(genre);
 });

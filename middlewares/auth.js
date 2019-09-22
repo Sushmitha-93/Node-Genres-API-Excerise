@@ -1,8 +1,12 @@
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
+// AUTH MIDDLEWARE
+// 1) Check if request has JWT token in it
+// 2) if JWT is valid token, put payload to req.user
+
 module.exports = function(req, res, next) {
-  // If JWT is absent, send 401
+  // If JWT is absent, send 401 (Unauthorised)
   const token = req.header("x-jwttoken");
   if (!token) return res.status(401).send("Access denied. No token provided");
 

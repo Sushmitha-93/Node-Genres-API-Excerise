@@ -7,7 +7,7 @@ const config = require("config");
 
 const { Users } = require("../models/user");
 
-// This is a Login API
+// API for LOGGING USER IN
 router.post("/", async function(req, res) {
   // Validate request
   const result = validateReqBody(res.body);
