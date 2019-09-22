@@ -7,6 +7,7 @@ const rentals = require("./routes/rentals");
 const users = require("./routes/users");
 const auth = require("./routes/auth");
 const config = require("config");
+const error = require("./middlewares/error");
 
 // Before we start the server - We must ensure below environment variable is set, otherwise exit
 if (!config.get("jwtPrivateKey")) {
@@ -23,12 +24,14 @@ app.use("/api/movies", movies);
 app.use("/api/rentals", rentals);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
+// Express "Error middleware" is defined after all the middlewares
+app.use(error);
 
 //Connect to MongoDB 'vidlydb' database genres
 mongoose
   .connect("mongodb://localhost/vidlydb", { useNewUrlParser: true })
   .then("Connected to MongoDB database...")
-  .catch(err => console.log("Could not connect to MongoDB", err));
+  .catch(err => console.log("Could not connect to MongoDB...", err));
 
 //need to listen to port
 const port = process.env.port || 3000;
