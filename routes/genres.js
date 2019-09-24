@@ -6,18 +6,23 @@ const adminMidware = require("../middlewares/admin");
 
 const { Genres, validateGenre } = require("../models/genre"); // requiring Genre model(step 3)
 
+const asyncMiddleware = require("../middlewares/async");
+
 // 1. Connect to MongoDB in index.js
 // 2. Create SCHEMA
 // 3. Create MODEL class from Schema (to call mongoose functions to find,save,update,delete)
 
-router.get("/", async (req, res, next) => {
-  try {
-    const genres = await Genres.find();
-    res.send(genres);
-  } catch (ex) {
-    next();
-  }
-});
+router.get(
+  "/",
+  asyncMiddleware(async (req, res, next) => {
+    try {
+      const genres = await Genres.find();
+      res.send(genres);
+    } catch (ex) {
+      next();
+    }
+  })
+);
 
 router.get("/:id", async (req, res) => {
   //Check if id exists

@@ -24,7 +24,7 @@ app.use("/api/movies", movies);
 app.use("/api/rentals", rentals);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
-// Express "Error middleware" is defined after all the middlewares
+// Express "Error middleware" is defined after all the middlewares. When something fails
 app.use(error);
 
 //Connect to MongoDB 'vidlydb' database genres
