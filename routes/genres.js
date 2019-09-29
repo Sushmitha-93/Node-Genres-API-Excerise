@@ -9,14 +9,8 @@ const { Genres, validateGenre } = require("../models/genre"); // requiring Genre
 
 require("express-async-errors");
 
-process.on("uncaughtException", ex => {
-  console.log("We got an uncaught exception");
-  logger.error(ex.message, ex);
-});
-
 process.on("unhandledRejection", ex => {
-  console.log("We got an unhandled rejected Promise");
-  logger.error(ex.message, ex);
+  throw ex; // Thow exception so that Winston will handle and log it
 });
 
 // 1. Connect to MongoDB in index.js

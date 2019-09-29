@@ -6,6 +6,11 @@ const logger = winston.createLogger({
     new winston.transports.Console(),
     new winston.transports.File({ filename: "logs.log" }),
     new winston.transports.MongoDB({ db: "mongodb://localhost/vidlydb" })
+  ],
+  exceptionHandlers: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "logs.log" }),
+    new winston.transports.MongoDB({ db: "mongodb://localhost/vidlydb" })
   ]
 });
 
