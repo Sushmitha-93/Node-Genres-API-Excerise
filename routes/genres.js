@@ -18,15 +18,15 @@ process.on("unhandledRejection", ex => {
 // 3. Create MODEL class from Schema (to call mongoose functions to find,save,update,delete)
 
 router.get("/", async (req, res, next) => {
-  throw new Error("Cannot get genres");
+  // throw new Error("Cannot get genres");
   const genres = await Genres.find();
   res.send(genres);
 });
 
 //throw new Error("Somthing failed on start up");
 
-const p = Promise.reject("Somthing failed.. Promise Rejected!");
-p.then(() => console.log("Done"));
+// const p = Promise.reject("Somthing failed.. Promise Rejected!");
+// p.then(() => console.log("Done"));
 
 router.get("/:id", async (req, res) => {
   //Check if id exists
