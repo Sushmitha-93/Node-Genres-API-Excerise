@@ -3,20 +3,36 @@ const router = express.Router(); // do module.exports = router
 
 const authMidware = require("../middlewares/auth");
 const adminMidware = require("../middlewares/admin");
+const { logger } = require("../logger");
 
 const { Genres, validateGenre } = require("../models/genre"); // requiring Genre model(step 3)
 
 require("express-async-errors");
+
+process.on("uncaughtException", ex => {
+  console.log("We got an uncaught exception");
+  logger.error(ex.message, ex);
+});
+
+process.on("unhandledRejection", ex => {
+  console.log("We got an unhandled rejected Promise");
+  logger.error(ex.message, ex);
+});
 
 // 1. Connect to MongoDB in index.js
 // 2. Create SCHEMA
 // 3. Create MODEL class from Schema (to call mongoose functions to find,save,update,delete)
 
 router.get("/", async (req, res, next) => {
-  throw new Error('Cannot get genres')
+  throw new Error("Cannot get genres");
   const genres = await Genres.find();
   res.send(genres);
 });
+
+//throw new Error("Somthing failed on start up");
+
+const p = Promise.reject("Somthing failed.. Promise Rejected!");
+p.then(() => console.log("Done"));
 
 router.get("/:id", async (req, res) => {
   //Check if id exists
