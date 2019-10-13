@@ -9,7 +9,7 @@ const error = require("../middlewares/error");
 
 module.exports = function(app) {
   app.use(express.json()); //parses body and return req.body
-  app.use("/api/genres", genres); // all routes starting with this will go to genres module
+  app.use("/api/genres", genres); // all API requests starting with this will go to genres module
   app.use("/api/customers", customers);
   app.use("/api/movies", movies);
   app.use("/api/rentals", rentals);

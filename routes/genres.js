@@ -23,7 +23,7 @@ router.get("/", async (req, res, next) => {
   res.send(genres);
 });
 
-//throw new Error("Somthing failed on start up");
+//throw new Error("Somthing failed on start up"); //outside routers
 
 // const p = Promise.reject("Somthing failed.. Promise Rejected!");
 // p.then(() => console.log("Done"));
@@ -39,6 +39,7 @@ router.get("/:id", async (req, res) => {
   res.send(genre);
 });
 
+// CREATE NEW GENRE (Admin Feature)
 router.post("/", authMidware, adminMidware, async (req, res) => {
   //validate client input i.e genre
   const result = validateGenre(req.body);
@@ -72,6 +73,7 @@ router.put("/:id", async (req, res) => {
   res.send(genre);
 });
 
+// DELETEING GENRE (Admin Feature)
 router.delete("/:id", authMidware, adminMidware, async (req, res) => {
   //Check if id exists
   let genre = await Genres.findByIdAndDelete(req.params.id).catch(err => {

@@ -1,19 +1,16 @@
-const config = require("config");
+const { logger } = require("./logger.js"); // 5) Require logger to log any errors
 
 //create server
 const express = require("express");
-const app = express();
-require("./startup/routes")(app);
+const app = express(); // 1) Create server instance
+require("./startup/routes")(app); // requiring all app.use, pass "app" to it as function parameter
 
-//Connect to MongoDB 'vidlydb' database genres
+// 2) Connect to MongoDB 'vidlydb' database genres
 require("./startup/db")();
 
-// Before we start the server - We must ensure below environment variable is set, otherwise exit
-if (!config.get("jwtPrivateKey")) {
-  console.log("FATAL ERROR: Env var vidly_jwtPrivateKey not set");
-  process.exit(1);
-}
+// 3) Before we start the server - We must ensure below environment variable is set, otherwise exit
+require("./startup/config")();
 
-//need to listen to port
+// 4) need to listen to port
 const port = process.env.port || 3000;
-app.listen(port, () => console.log(`Listening to port ${port}`));
+app.listen(port, () => logger.info(`Listening to port ${port}`));

@@ -6,8 +6,10 @@ const config = require("config");
 // 2) if JWT is valid token, put payload to req.user
 
 module.exports = function(req, res, next) {
-  // If JWT is absent, send 401 (Unauthorised)
+  // Get token from request header
   const token = req.header("x-jwttoken");
+
+  // If JWT is absent, send 401 (Unauthorised)
   if (!token) return res.status(401).send("Access denied. No token provided");
 
   // Verify the token. If its wrong it throws error, so we should make sure to catch it

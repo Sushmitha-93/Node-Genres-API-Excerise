@@ -11,7 +11,7 @@ const genreSchema = mongoose.Schema({
 
 const Genres = mongoose.model("genres", genreSchema);
 
-//Validate client genre input
+//Validate client genre input using Joi
 function validateGenre(genre) {
   const schema = {
     name: joi
