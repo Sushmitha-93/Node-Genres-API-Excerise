@@ -17,6 +17,7 @@ function validateGenre(genre) {
     name: joi
       .string()
       .min(3)
+      .max(25)
       .required()
   };
   return joi.validate(genre, schema);

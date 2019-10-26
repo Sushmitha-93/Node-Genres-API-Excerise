@@ -10,8 +10,11 @@ describe("User.genrateJwtAuthToken", () => {
       isAdmin: true
     };
     const user = new Users(payload);
+
     const JWTToken = user.generateJwtAuthToken();
+
     const decoded = jwt.verify(JWTToken, config.get("jwtPrivateKey"));
+
     expect(decoded).toMatchObject(payload);
   });
 });
