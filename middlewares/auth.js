@@ -4,6 +4,7 @@ const config = require("config");
 // AUTH MIDDLEWARE
 // 1) Check if request has JWT token in it
 // 2) if JWT is valid token, put payload to req.user
+//    Token will have { _id: this._id, isAdmin: this.isAdmin } user information
 
 module.exports = function(req, res, next) {
   // Get token from request header
